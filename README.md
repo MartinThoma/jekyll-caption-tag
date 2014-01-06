@@ -22,6 +22,9 @@ Examples
 
 Changelog
 =========
+Version 1.1, 2014-01-07:
+    - Just take the URL that was given, don't add anything
+    - Close image tag
 Version 1.0, 2014-01-02: Initial commit.
 
 License
