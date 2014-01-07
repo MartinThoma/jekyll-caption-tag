@@ -21,6 +21,9 @@ Place a `caption` tag in your content file, e.g.:
 | align         | The content of this will be added to the class of the surrounding `<div>`. |
 | width         | The width of the image.                                                    |
 | height        | The width of the image.                                                    |
+| alt           | The alternative attribute for images.                                      |
+| caption       | The text below the image.                                                  |
+| url           | The source (src) of the image.                                             |
 
 Examples
 ========
