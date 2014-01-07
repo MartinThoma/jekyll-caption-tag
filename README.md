@@ -13,8 +13,14 @@ How To use
 ==========
 Place a `caption` tag in your content file, e.g.:
 ```
-{% caption align="aligncenter" width="512" height="233" alt="The order of points is important for the definition of a polygon" text="[A, B, C, D, E, F, G] != [A, B, C, D, F, E, G]" url="../images/2013/11/polygon-order.png" %}
+{% caption align="aligncenter" width="512" height="233" alt="The order of points is important for the definition of a polygon" caption="[A, B, C, D, E, F, G] != [A, B, C, D, F, E, G]" url="../images/2013/11/polygon-order.png" %}
 ```
+
+| Attribute     | Details                                                                    |
+| ------------- |--------------------------------------------------------------------------- |
+| align         | The content of this will be added to the class of the surrounding `<div>`. |
+| width         | The width of the image.                                                    |
+| height        | The width of the image.                                                    |
 
 Examples
 ========
@@ -22,6 +28,8 @@ Examples
 
 Changelog
 =========
+Version 1.2, 2014-01-07:
+    - The enclosing div is now 10px wider than the img inside
 Version 1.1, 2014-01-07:
     - Just take the URL that was given, don't add anything
     - Close image tag

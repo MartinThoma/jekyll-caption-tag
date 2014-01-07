@@ -3,7 +3,7 @@
 #
 # Author: Martin Thoma (info@martin-thoma.de)
 # Source: https://github.com/MartinThoma/jekyll-caption-tag
-# Version: 1.1
+# Version: 1.2
 #
 # Example usage:
 #   {% caption align="aligncenter" width="500" alt="WER calculation" text="WER calculation" url="/images/2013/11/WER-calculation.png" %}
@@ -40,11 +40,30 @@ module Jekyll
 
     def render(context)
         @hash = parse_attrs(@text)
-        "<div style=\"width: #{@hash['width']}px\" class=\"wp-caption #{@hash['align']}\">" +
+
+        if @hash.has_key?('text') && @hash.has_key?('caption')
+            puts "[Warning]["+context.environments.first["page"]["url"]+"] One caption Liquid tag has both, 'text' and 'caption' attribute. Using 'caption' is better."
+        end
+
+        if @hash.has_key?('title') && @hash.has_key?('caption')
+            puts "[Warning]["+context.environments.first["page"]["url"]+"] One caption Liquid tag has both, 'title' and 'caption' attribute. Using 'caption' is better."
+        end
+
+        if @hash.has_key?('text') && !@hash.has_key?('caption')
+            @hash['caption'] = @hash['text']
+        end
+
+        if @hash.has_key?('title') && !@hash.has_key?('caption')
+            @hash['caption'] = @hash['title']
+        end
+
+        @divWidth = (@hash['width'].to_i+10).to_s
+
+        "<div style=\"width: #{@divWidth}px\" class=\"wp-caption #{@hash['align']}\">" +
         "<a href=\"#{@hash['url']}\">" +
             "<img src=\"#{@hash['url']}\" alt=\"#{@hash['text']}\" width=\"#{@hash['width']}\" height=\"#{@hash['height']}\" class=\"#{@hash['class']}\"/>" +
         "</a>" +
-        "<p class=\"wp-caption-text\">#{@hash['text']}</p>" +
+        "<p class=\"wp-caption-text\">#{@hash['caption']}</p>" +
         "</div>"
     end
   end
