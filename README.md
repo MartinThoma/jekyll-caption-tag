@@ -6,8 +6,9 @@ images like they are in WordPress.
 
 How To Install
 ===============
-1. Copy `caption_tag.rb` into `<your-jekyll-site>/_plugins`.
-2. Add the styles from `style.css` to your stylesheets.
+1. Install the `csv` gem (`sudo gem install csv` on Debian-based machines)
+2. Copy `caption_tag.rb` into `<your-jekyll-site>/_plugins`.
+3. Add the styles from `style.css` to your stylesheets.
 
 How To use
 ==========
