@@ -6,7 +6,7 @@ images like they are in WordPress.
 
 How To Install
 ===============
-1. Install the `csv` gem (`sudo gem install csv` on Debian-based machines)
+1. Install all required gems: `csv`, `dimensions`, `rmagick` (`sudo gem install csv dimensions rmagick` on Debian-based machines)
 2. Copy `caption_tag.rb` into `<your-jekyll-site>/_plugins`.
 3. Add the styles from `style.css` to your stylesheets.
 
@@ -14,7 +14,7 @@ How To use
 ==========
 Place a `caption` tag in your content file, e.g.:
 ```
-{% caption align="aligncenter" width="512" height="233" alt="The order of points is important for the definition of a polygon" caption="[A, B, C, D, E, F, G] != [A, B, C, D, F, E, G]" url="../images/2013/11/polygon-order.png" %}
+{% caption align="aligncenter" width="512" height="233" alt="The order of points is important for the definition of a polygon" text="[A, B, C, D, E, F, G] != [A, B, C, D, F, E, G]" url="../images/2013/11/polygon-order.png" %}
 ```
 
 | Attribute     | Details                                                                    |
@@ -32,10 +32,12 @@ Examples
 
 Changelog
 =========
+Version 1.3, 2014-03-24:
+    - Captions can resizes automatically to a given maximum size while preserving the aspect ratio.
 Version 1.2, 2014-01-07:
-    - The enclosing div is now 10px wider than the img inside
+    - The enclosing `div` is now 10px wider than the `img` inside.
 Version 1.1, 2014-01-07:
-    - Just take the URL that was given, don't add anything
+    - Just take the URL that was given, don't add anything.
     - Close image tag
 Version 1.0, 2014-01-02: Initial commit.
 
