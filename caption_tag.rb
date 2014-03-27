@@ -3,7 +3,7 @@
 #
 # Author: Martin Thoma (info@martin-thoma.de)
 # Source: https://github.com/MartinThoma/jekyll-caption-tag
-# Version: 1.2
+# Version: 1.4
 #
 # Example usage:
 #   {% caption align="aligncenter" width="500" alt="WER calculation" text="WER calculation" url="../images/2013/11/WER-calculation.png" %}
@@ -60,8 +60,20 @@ module Jekyll
 
     def get_destination_path(site_source, post_path, img_src)
         destination_path = File.join(site_source, "/captions")
-        destination_img_path = File.join(destination_path, File.basename(img_src))
+        ext  = File.extname(img_src)
+        base = File.basename(img_src, ext)
+        destination_img_path = File.join(destination_path, base + ext)
         new_filename = File.expand_path(destination_img_path)
+
+        if File.exists?(new_filename)
+            i = 1
+            begin
+                i += 1
+                destination_img_path = File.join(destination_path, base + "-" + i.to_s + ext)
+                new_filename = File.expand_path(destination_img_path)
+            end while File.exists?(new_filename)
+        end
+        
         return new_filename
     end
 

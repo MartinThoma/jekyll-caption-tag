@@ -32,6 +32,8 @@ Examples
 
 Changelog
 =========
+Version 1.4, 2014-03-27:
+    - Fixed issue (if two files had the same name, but were in different folder the captions were overwritten)
 Version 1.3, 2014-03-24:
     - Captions can resizes automatically to a given maximum size while preserving the aspect ratio.
 Version 1.2, 2014-01-07:
