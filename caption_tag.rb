@@ -30,6 +30,12 @@ module Jekyll
       @tokens = tokens
     end
 
+    # Parse what's within {% caption XYZ %}.
+    # Params:
+    # +input+:: The caption tag, e.g. 
+    #          'align="aligncenter" width="500" 
+    #           alt="xyz" text="abc" 
+    #           url="../images/2014/04/kit-pgp-personal-management.png"'
     def parse_attrs(input)
       options = { col_sep: '=', row_sep: ' ', quote_char: '"' }
       csv = CSV.new input, options
@@ -41,6 +47,13 @@ module Jekyll
       end
     end
 
+    # Returns the absolute image path.
+    # Params:
+    # +site_source+:: e.g. '/home/moose/Downloads/MartinThoma.github.io'
+    # +page_path+:: e.g. '_posts/2014-04-02-tcl.md'
+    # +img_src+:: The source that was within the 'url' attribute of the caption
+    #             tag. e.g.
+    #             '../images/2014/03/panasonic-cable-standard-cable.jpg'
     def get_image_path(site_source, page_path, img_src)
         if img_src.include?('://')
             # TODO:download to local storage
@@ -53,11 +66,21 @@ module Jekyll
         return new_path
     end
 
+    # Returns the url of the image where it will be online.
+    # Params:
+    # +site_source+:: e.g. '/home/moose/Downloads/MartinThoma.github.io'
+    # +baseurl+:: e.g. 'http://localhost/blog' or 'http://martin-thoma.com'
+    # +new_filename+:: e.g. '/home/moose/Downloads/MartinThoma.github.io/captions/panasonic-cable-standard-cable.jpg'
     def get_online_url(site_source, baseurl, new_filename)
         dest = File.join(baseurl, new_filename[site_source.length..-1])
         return dest
     end
 
+    # Get the path where the image will be before the actual site gets generated.
+    # Params:
+    # +site_source+:: e.g. '/home/moose/Downloads/MartinThoma.github.io'
+    # +post_path+:: e.g. '_posts/2014-04-02-tcl.md'
+    # +img_src+:: e.g. '../images/2014/03/panasonic-lumix-tz41.jpg'
     def get_destination_path(site_source, post_path, img_src)
         destination_path = File.join(site_source, "/captions")
         ext  = File.extname(img_src)
@@ -77,6 +100,7 @@ module Jekyll
         return new_filename
     end
 
+    # Replace caption tag with HTML. This is the main part of this plugin.
     def render(context)
         @hash = parse_attrs(@text)
 
@@ -128,7 +152,7 @@ module Jekyll
                 @hash['width'] = width.to_s
             end
         else
-            puts "[Warning] " + img_path + " does not exist."
+            puts "[Warning] " + img_path + " does not exist (in " + context.registers[:page]["path"] + ")"
         end
 
         "<div style=\"width: #{@divWidth}px\" class=\"wp-caption #{@hash['align']}\">" +
