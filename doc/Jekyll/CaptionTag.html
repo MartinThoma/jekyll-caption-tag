@@ -180,24 +180,34 @@
 
         <div class="method-description">
           
-          <p>Get the path where the image will be before the actual site gets generated.
-Params:</p>
-<dl class="rdoc-list note-list"><dt><code>site_source</code>
+          <p>Get the path where the image will be before the actual site gets generated.</p>
+<ul><li>
+<p><strong>Args</strong>    :</p>
+<ul><li><dl class="rdoc-list note-list"><dt><code>site_source</code>
 <dd>
 <p>e.g. ‘/home/moose/Downloads/MartinThoma.github.io’</p>
-</dd><dt><code>post_path</code>
+</dd></dl>
+</li><li><dl class="rdoc-list note-list"><dt><code>post_path</code>
 <dd>
 <p>e.g. ‘_posts/2014-04-02-tcl.md’</p>
-</dd><dt><code>img_src</code>
-<dd>
-<p>e.g. ‘../images/2014/03/panasonic-lumix-tz41.jpg’</p>
 </dd></dl>
+</li><li><dl class="rdoc-list note-list"><dt><code>img_src</code>
+<dd>
+<p>e.g. ‘../images/2014/03/lolcat.jpg’</p>
+</dd></dl>
+</li></ul>
+</li><li>
+<p><strong>Returns</strong>    :</p>
+<ul><li>
+<p>e.g.  /home/moose/Downloads/MartinThoma.github.io/captions/lolcat.jpg</p>
+</li></ul>
+</li></ul>
           
           
 
           
           <div class="method-source-code" id="get_destination_path-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 84</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 93</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_destination_path</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-identifier">post_path</span>, <span class="ruby-identifier">img_src</span>)
     <span class="ruby-identifier">destination_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-string">&quot;/captions&quot;</span>)
     <span class="ruby-identifier">ext</span>  = <span class="ruby-constant">File</span>.<span class="ruby-identifier">extname</span>(<span class="ruby-identifier">img_src</span>)
@@ -239,24 +249,36 @@ Params:</p>
 
         <div class="method-description">
           
-          <p>Returns the absolute image path. Params:</p>
-<dl class="rdoc-list note-list"><dt><code>site_source</code>
+          <p>Returns the absolute image path.</p>
+<ul><li>
+<p><strong>Args</strong>    :</p>
+<ul><li><dl class="rdoc-list note-list"><dt><code>site_source</code>
 <dd>
 <p>e.g. ‘/home/moose/Downloads/MartinThoma.github.io’</p>
-</dd><dt><code>page_path</code>
+</dd></dl>
+</li><li><dl class="rdoc-list note-list"><dt><code>page_path</code>
 <dd>
 <p>e.g. ‘_posts/2014-04-02-tcl.md’</p>
-</dd><dt><code>img_src</code>
+</dd></dl>
+</li><li><dl class="rdoc-list note-list"><dt><code>img_src</code>
 <dd>
 <p>The source that was within the ‘url’ attribute of the caption tag. e.g.
-‘../images/2014/03/panasonic-cable-standard-cable.jpg’</p>
+‘../images/2014/03/lolcat.jpg’</p>
 </dd></dl>
+</li></ul>
+</li><li>
+<p><strong>Returns</strong>    :</p>
+<ul><li>
+<p>e.g.
+‘/home/moose/Downloads/MartinThoma.github.io/images/2014/03/lolcat.jpg’</p>
+</li></ul>
+</li></ul>
           
           
 
           
           <div class="method-source-code" id="get_image_path-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 57</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_image_path</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-identifier">page_path</span>, <span class="ruby-identifier">img_src</span>)
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">img_src</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">'://'</span>)
         <span class="ruby-comment"># TODO:download to local storage</span>
@@ -291,25 +313,35 @@ Params:</p>
 
         <div class="method-description">
           
-          <p>Returns the url of the image where it will be online. Params:</p>
-<dl class="rdoc-list note-list"><dt><code>site_source</code>
+          <p>Returns the url of the image where it will be online.</p>
+<ul><li>
+<p><strong>Args</strong>    :</p>
+<ul><li><dl class="rdoc-list note-list"><dt><code>site_source</code>
 <dd>
 <p>e.g. ‘/home/moose/Downloads/MartinThoma.github.io’</p>
-</dd><dt><code>baseurl</code>
+</dd></dl>
+</li><li><dl class="rdoc-list note-list"><dt><code>baseurl</code>
 <dd>
 <p>e.g. ‘<a href="http://localhost/blog">localhost/blog</a>’ or ‘<a
 href="http://martin-thoma.com">martin-thoma.com</a>’</p>
-</dd><dt><code>new_filename</code>
-<dd>
-<p>e.g.
-‘/home/moose/Downloads/MartinThoma.github.io/captions/panasonic-cable-standard-cable.jpg’</p>
 </dd></dl>
+</li><li><dl class="rdoc-list note-list"><dt><code>new_filename</code>
+<dd>
+<p>e.g. ‘/home/moose/Downloads/MartinThoma.github.io/captions/lolcat.jpg’</p>
+</dd></dl>
+</li></ul>
+</li><li>
+<p><strong>Returns</strong>    :</p>
+<ul><li>
+<p>e.g.  <img src="http://localhost/blog/captions/lolcat.jpg" /></p>
+</li></ul>
+</li></ul>
           
           
 
           
           <div class="method-source-code" id="get_online_url-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 74</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 81</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_online_url</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-identifier">baseurl</span>, <span class="ruby-identifier">new_filename</span>)
     <span class="ruby-identifier">dest</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">baseurl</span>, <span class="ruby-identifier">new_filename</span>[<span class="ruby-identifier">site_source</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>])
     <span class="ruby-keyword">return</span> <span class="ruby-identifier">dest</span>
@@ -337,7 +369,10 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
 
         <div class="method-description">
           
-          <p>Parse what’s within {% caption XYZ %}. Params:</p>
+          <p>Parse what’s within {% caption XYZ %}.</p>
+<ul><li>
+<p><strong>Args</strong>    :</p>
+</li></ul>
 <dl class="rdoc-list note-list"><dt><code>input</code>
 <dd>
 <p>The caption tag, e.g.</p>
@@ -345,13 +380,19 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
 
 <pre>'align=&quot;aligncenter&quot; width=&quot;500&quot; 
  alt=&quot;xyz&quot; text=&quot;abc&quot; 
- url=&quot;../images/2014/04/kit-pgp-personal-management.png&quot;'</pre>
+ url=&quot;../images/2014/03/lolcat.jpg&quot;'</pre>
+<ul><li>
+<p><strong>Returns</strong>    :</p>
+</li></ul>
+
+<p>{“align”=&gt;“aligncenter”, “width”=&gt;“500”, “alt”=&gt;“xyz”,
+“text”=&gt;“abc”, “url”=&gt;“../images/2014/03/lolcat.jpg”}</p>
           
           
 
           
           <div class="method-source-code" id="parse_attrs-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 39</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 42</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_attrs</span>(<span class="ruby-identifier">input</span>)
   <span class="ruby-identifier">options</span> = { <span class="ruby-identifier">col_sep</span><span class="ruby-operator">:</span> <span class="ruby-string">'='</span>, <span class="ruby-identifier">row_sep</span><span class="ruby-operator">:</span> <span class="ruby-string">' '</span>, <span class="ruby-identifier">quote_char</span><span class="ruby-operator">:</span> <span class="ruby-string">'&quot;'</span> }
   <span class="ruby-identifier">csv</span> = <span class="ruby-constant">CSV</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">input</span>, <span class="ruby-identifier">options</span>
@@ -391,7 +432,7 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
 
           
           <div class="method-source-code" id="render-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 104</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 113</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">context</span>)
     <span class="ruby-ivar">@hash</span> = <span class="ruby-identifier">parse_attrs</span>(<span class="ruby-ivar">@text</span>)
 
