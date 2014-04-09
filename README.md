@@ -53,3 +53,13 @@ What does this mean?
 * Don't blame me when thinks don't work (though you can file an issue)
 * Please don't remove the link in the comments of `caption_tag.rb`.
   This might help others to find this plugin
+
+Documentation
+=============
+I have a [generated rdoc documentation](https://rawgithub.com/MartinThoma/jekyll-caption-tag/master/doc/index.html).
+
+It was generated with this command:
+
+```bash
+rdoc --exclude=/doc
+```

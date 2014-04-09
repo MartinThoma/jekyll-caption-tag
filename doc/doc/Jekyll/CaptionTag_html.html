@@ -286,8 +286,19 @@ class=“ruby-identifier”&gt;tokens&lt;/span&gt;)</p>
 
     &lt;div class=&quot;method-description&quot;&gt;
 
-      &lt;div class=&quot;method-source-code&quot; id=&quot;get_destination_path-source&quot;&gt;
-        &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 73&lt;/span&gt;</pre>
+      &lt;p&gt;Get the path where the image will be before the actual site gets generated.</pre>
+
+<p>Params:&lt;/p&gt; &lt;dl class=“rdoc-list
+note-list”&gt;&lt;dt&gt;<code>site_source</code> &lt;dd&gt; &lt;p&gt;e.g.
+‘/home/moose/Downloads/MartinThoma.github.io’&lt;/p&gt;
+&lt;/dd&gt;&lt;dt&gt;<code>post_path</code> &lt;dd&gt; &lt;p&gt;e.g.
+‘_posts/2014-04-02-tcl.md’&lt;/p&gt;
+&lt;/dd&gt;&lt;dt&gt;<code>img_src</code> &lt;dd&gt; &lt;p&gt;e.g.
+‘../images/2014/03/panasonic-lumix-tz41.jpg’&lt;/p&gt;
+&lt;/dd&gt;&lt;/dl&gt;</p>
+
+<pre>&lt;div class=&quot;method-source-code&quot; id=&quot;get_destination_path-source&quot;&gt;
+  &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 84&lt;/span&gt;</pre>
 
 <p>&lt;span class=“ruby-keyword”&gt;def&lt;/span&gt; &lt;span
 class=“ruby-identifier”&gt;get_destination_path&lt;/span&gt;(&lt;span
@@ -345,7 +356,7 @@ that was within the ‘url’ attribute of the caption tag. e.g.
 &lt;/dd&gt;&lt;/dl&gt;</p>
 
 <pre>&lt;div class=&quot;method-source-code&quot; id=&quot;get_image_path-source&quot;&gt;
-  &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 51&lt;/span&gt;</pre>
+  &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 57&lt;/span&gt;</pre>
 
 <p>&lt;span class=“ruby-keyword”&gt;def&lt;/span&gt; &lt;span
 class=“ruby-identifier”&gt;get_image_path&lt;/span&gt;(&lt;span
@@ -398,7 +409,7 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p">martin-thoma.com”>m
 &lt;/dd&gt;&lt;/dl&gt;</p>
 
 <pre>&lt;div class=&quot;method-source-code&quot; id=&quot;get_online_url-source&quot;&gt;
-  &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 68&lt;/span&gt;</pre>
+  &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 74&lt;/span&gt;</pre>
 
 <p>&lt;span class=“ruby-keyword”&gt;def&lt;/span&gt; &lt;span
 class=“ruby-identifier”&gt;get_online_url&lt;/span&gt;(&lt;span
@@ -429,8 +440,19 @@ class=“ruby-identifier”&gt;new_filename&lt;/span&gt;)</p>
 
   &lt;div class=&quot;method-description&quot;&gt;
 
-    &lt;div class=&quot;method-source-code&quot; id=&quot;parse_attrs-source&quot;&gt;
-      &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 33&lt;/span&gt;</pre>
+    &lt;p&gt;Parse what’s within {% caption XYZ %}. Params:&lt;/p&gt;</pre>
+
+<p>&lt;dl class=“rdoc-list note-list”&gt;&lt;dt&gt;<code>input</code>
+&lt;dd&gt; &lt;p&gt;The caption tag, e.g.&lt;/p&gt; &lt;/dd&gt;&lt;/dl&gt;</p>
+
+<p>&lt;pre&gt;‘align=&amp;quot;aligncenter&amp;quot;
+width=&amp;quot;500&amp;quot;</p>
+
+<pre>alt=&amp;quot;xyz&amp;quot; text=&amp;quot;abc&amp;quot; 
+url=&amp;quot;../images/2014/04/kit-pgp-personal-management.png&amp;quot;'&lt;/pre&gt;
+
+         &lt;div class=&quot;method-source-code&quot; id=&quot;parse_attrs-source&quot;&gt;
+           &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 39&lt;/span&gt;</pre>
 
 <p>&lt;span class=“ruby-keyword”&gt;def&lt;/span&gt; &lt;span
 class=“ruby-identifier”&gt;parse_attrs&lt;/span&gt;(&lt;span
@@ -465,8 +487,10 @@ class=“ruby-identifier”&gt;input&lt;/span&gt;)</p>
 
   &lt;div class=&quot;method-description&quot;&gt;
 
+    &lt;p&gt;Replace caption tag with HTML. This is the main part of this plugin.&lt;/p&gt;
+
     &lt;div class=&quot;method-source-code&quot; id=&quot;render-source&quot;&gt;
-      &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 92&lt;/span&gt;</pre>
+      &lt;pre&gt;&lt;span class=&quot;ruby-comment&quot;&gt;# File caption_tag.rb, line 104&lt;/span&gt;</pre>
 
 <p>&lt;span class=“ruby-keyword”&gt;def&lt;/span&gt; &lt;span
 class=“ruby-identifier”&gt;render&lt;/span&gt;(&lt;span
