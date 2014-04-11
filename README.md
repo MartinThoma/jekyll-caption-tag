@@ -9,6 +9,10 @@ How To Install
 1. Install all required gems: `dimensions`, `rmagick` (`sudo gem install dimensions rmagick` on Debian-based machines)
 2. Copy `caption_tag.rb` into `<your-jekyll-site>/_plugins`.
 3. Add the styles from `style.css` to your stylesheets.
+4. The thumbnails get created in `<your-jekyll-site>/captions`. 
+   Make sure that you don't use this folder.
+5. After every site generation, move `<your-jekyll-site>/captions` to
+   `<your-jekyll-site>/_site/captions`.
 
 How To use
 ==========
@@ -63,3 +67,10 @@ It was generated with this command:
 ```bash
 rdoc --exclude=/doc
 ```
+
+TODO
+====
+* Create a logfile which caption images have been created so that they don't
+  get created multiple times.
+* Try to get rid of step 5 of "how to install".
+* Add a configuration option for captions folder.
