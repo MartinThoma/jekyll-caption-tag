@@ -47,20 +47,20 @@ Examples
 
 Changelog
 =========
-Version 1.5, 2014-05-13:
+* Version 1.5, 2014-05-13:
     - Added global configuration options
     - Added check if image was already scaled
     - Added logger
-Version 1.4, 2014-03-27:
+* Version 1.4, 2014-03-27:
     - Fixed issue (if two files had the same name, but were in different folder the captions were overwritten)
-Version 1.3, 2014-03-24:
+* Version 1.3, 2014-03-24:
     - Captions can resizes automatically to a given maximum size while preserving the aspect ratio.
-Version 1.2, 2014-01-07:
+* Version 1.2, 2014-01-07:
     - The enclosing `div` is now 10px wider than the `img` inside.
-Version 1.1, 2014-01-07:
+* Version 1.1, 2014-01-07:
     - Just take the URL that was given, don't add anything.
     - Close image tag
-Version 1.0, 2014-01-02: Initial commit.
+* Version 1.0, 2014-01-02: Initial commit.
 
 License
 =======
@@ -85,6 +85,4 @@ rdoc --exclude=/doc
 
 TODO
 ====
-* Create a logfile which caption images have been created so that they don't
-  get created multiple times.
 * Try to get rid of step 5 of "how to install".
