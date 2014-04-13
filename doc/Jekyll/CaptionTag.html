@@ -75,15 +75,21 @@
     
     <li class="calls-super" ><a href="#method-c-new">::new</a>
     
+    <li ><a href="#method-i-dump_serialized_data">#dump_serialized_data</a>
+    
     <li ><a href="#method-i-get_destination_path">#get_destination_path</a>
     
     <li ><a href="#method-i-get_image_path">#get_image_path</a>
     
     <li ><a href="#method-i-get_online_url">#get_online_url</a>
     
+    <li ><a href="#method-i-load_serialized_data">#load_serialized_data</a>
+    
     <li ><a href="#method-i-parse_attrs">#parse_attrs</a>
     
     <li ><a href="#method-i-render">#render</a>
+    
+    <li ><a href="#method-i-was_already_scaled">#was_already_scaled</a>
     
   </ul>
 </div>
@@ -143,11 +149,13 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 27</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">tag_name</span>, <span class="ruby-identifier">text</span>, <span class="ruby-identifier">tokens</span>)
   <span class="ruby-keyword">super</span>
   <span class="ruby-ivar">@text</span> = <span class="ruby-identifier">text</span>
   <span class="ruby-ivar">@tokens</span> = <span class="ruby-identifier">tokens</span>
+  <span class="ruby-ivar">@serialized_filename</span> = <span class="ruby-string">&quot;caption_tag_serialized.yaml&quot;</span>
+  <span class="ruby-ivar">@written_files</span> = <span class="ruby-identifier">load_serialized_data</span>(<span class="ruby-ivar">@serialized_filename</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -167,6 +175,57 @@
        </header>
 
     
+      <div id="method-i-dump_serialized_data" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">dump_serialized_data</span><span
+            class="method-args">(serialization_filename, written_files, original_image_path, orig_width, orig_height, scaled_width, scaled_height)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="dump_serialized_data-source">
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">dump_serialized_data</span>(<span class="ruby-identifier">serialization_filename</span>, <span class="ruby-identifier">written_files</span>,
+                         <span class="ruby-identifier">original_image_path</span>, <span class="ruby-identifier">orig_width</span>, <span class="ruby-identifier">orig_height</span>,
+                         <span class="ruby-identifier">scaled_width</span>, <span class="ruby-identifier">scaled_height</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">written_files</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">original_image_path</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">written_files</span>[<span class="ruby-identifier">original_image_path</span>][<span class="ruby-string">&quot;scaled&quot;</span>].
+                                                    <span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">scaled_width</span>)
+            <span class="ruby-comment"># The scaled image is not in the written_files set. Insert it.</span>
+            <span class="ruby-identifier">written_files</span>[<span class="ruby-identifier">original_image_path</span>][<span class="ruby-string">&quot;scaled&quot;</span>][<span class="ruby-identifier">scaled_width</span>] =
+                                    <span class="ruby-identifier">scaled_height</span>
+        <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">written_files</span>[<span class="ruby-identifier">original_image_path</span>] = {<span class="ruby-string">&quot;orig_width&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">orig_width</span>,
+                                     <span class="ruby-string">&quot;orig_height&quot;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">orig_height</span>,
+                                     <span class="ruby-string">&quot;scaled&quot;</span> =<span class="ruby-operator">&gt;</span> 
+                                         {<span class="ruby-identifier">scaled_width</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">scaled_height</span> }
+                                    }
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">serialized</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">dump</span>(<span class="ruby-identifier">written_files</span>)
+    <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">serialization_filename</span>, <span class="ruby-string">'w'</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span> <span class="ruby-identifier">file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">serialized</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-i-get_destination_path" class="method-detail ">
         
         <div class="method-heading">
@@ -180,7 +239,8 @@
 
         <div class="method-description">
           
-          <p>Get the path where the image will be before the actual site gets generated.</p>
+          <p>Get the path where the image will be before the actual site gets 
+generated.</p>
 <ul><li>
 <p><strong>Args</strong>    :</p>
 <ul><li><dl class="rdoc-list note-list"><dt><code>site_source</code>
@@ -207,9 +267,9 @@
 
           
           <div class="method-source-code" id="get_destination_path-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 93</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 167</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_destination_path</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-identifier">post_path</span>, <span class="ruby-identifier">img_src</span>)
-    <span class="ruby-identifier">destination_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-string">&quot;/captions&quot;</span>)
+    <span class="ruby-identifier">destination_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-ivar">@caption_folder</span>)
     <span class="ruby-identifier">ext</span>  = <span class="ruby-constant">File</span>.<span class="ruby-identifier">extname</span>(<span class="ruby-identifier">img_src</span>)
     <span class="ruby-identifier">base</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">img_src</span>, <span class="ruby-identifier">ext</span>)
     <span class="ruby-identifier">destination_img_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">destination_path</span>, <span class="ruby-identifier">base</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ext</span>)
@@ -219,7 +279,8 @@
         <span class="ruby-identifier">i</span> = <span class="ruby-value">1</span>
         <span class="ruby-keyword">begin</span>
             <span class="ruby-identifier">i</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-            <span class="ruby-identifier">destination_img_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">destination_path</span>, <span class="ruby-identifier">base</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;-&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">i</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ext</span>)
+            <span class="ruby-identifier">destination_img_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">destination_path</span>,
+                                             <span class="ruby-identifier">base</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;-&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">i</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ext</span>)
             <span class="ruby-identifier">new_filename</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">destination_img_path</span>)
         <span class="ruby-keyword">end</span> <span class="ruby-keyword">while</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">new_filename</span>)
     <span class="ruby-keyword">end</span>
@@ -262,7 +323,7 @@
 </dd></dl>
 </li><li><dl class="rdoc-list note-list"><dt><code>img_src</code>
 <dd>
-<p>The source that was within the ‘url’ attribute of the caption tag. e.g.
+<p>The source that was within the ‘url’ attribute of the  caption tag. e.g.
 ‘../images/2014/03/lolcat.jpg’</p>
 </dd></dl>
 </li></ul>
@@ -278,7 +339,7 @@
 
           
           <div class="method-source-code" id="get_image_path-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 61</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 129</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_image_path</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-identifier">page_path</span>, <span class="ruby-identifier">img_src</span>)
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">img_src</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">'://'</span>)
         <span class="ruby-comment"># TODO:download to local storage</span>
@@ -286,7 +347,8 @@
     <span class="ruby-keyword">else</span>
         <span class="ruby-identifier">current_post_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-identifier">page_path</span>)
         <span class="ruby-identifier">current_post_folder_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">current_post_path</span>)
-        <span class="ruby-identifier">new_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">current_post_folder_path</span>, <span class="ruby-identifier">img_src</span>))
+        <span class="ruby-identifier">new_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">current_post_folder_path</span>,
+                                              <span class="ruby-identifier">img_src</span>))
     <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">return</span> <span class="ruby-identifier">new_path</span>
 <span class="ruby-keyword">end</span></pre>
@@ -327,8 +389,10 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
 </dd></dl>
 </li><li><dl class="rdoc-list note-list"><dt><code>new_filename</code>
 <dd>
-<p>e.g. ‘/home/moose/Downloads/MartinThoma.github.io/captions/lolcat.jpg’</p>
+<p>e.g. ‘</p>
 </dd></dl>
+
+<pre>/home/moose/Downloads/MartinThoma.github.io/captions/lolcat.jpg'</pre>
 </li></ul>
 </li><li>
 <p><strong>Returns</strong>    :</p>
@@ -341,10 +405,57 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
 
           
           <div class="method-source-code" id="get_online_url-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 81</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 152</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_online_url</span>(<span class="ruby-identifier">site_source</span>, <span class="ruby-identifier">baseurl</span>, <span class="ruby-identifier">new_filename</span>)
     <span class="ruby-identifier">dest</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">baseurl</span>, <span class="ruby-identifier">new_filename</span>[<span class="ruby-identifier">site_source</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>])
     <span class="ruby-keyword">return</span> <span class="ruby-identifier">dest</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-load_serialized_data" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">load_serialized_data</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Load a serialized file so that images don’t get scaled multiple times</p>
+<ul><li>
+<p><strong>Args</strong>    :</p>
+</li></ul>
+<dl class="rdoc-list note-list"><dt><code>filename</code>
+<dd>
+<p>Name of the serialized file</p>
+</dd></dl>
+          
+          
+
+          
+          <div class="method-source-code" id="load_serialized_data-source">
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_serialized_data</span>(<span class="ruby-identifier">filename</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">filename</span>)
+      <span class="ruby-identifier">contents</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">filename</span>)
+      <span class="ruby-identifier">written_files</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load</span>(<span class="ruby-identifier">contents</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">written_files</span> = {}
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">written_files</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -386,13 +497,16 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
 </li></ul>
 
 <p>{“align”=&gt;“aligncenter”, “width”=&gt;“500”, “alt”=&gt;“xyz”,
-“text”=&gt;“abc”, “url”=&gt;“../images/2014/03/lolcat.jpg”}</p>
+“text”=&gt;“abc”,</p>
+
+<pre class="ruby"><span class="ruby-string">&quot;url&quot;</span>=<span class="ruby-operator">&gt;</span><span class="ruby-string">&quot;../images/2014/03/lolcat.jpg&quot;</span>}
+</pre>
           
           
 
           
           <div class="method-source-code" id="parse_attrs-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 42</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_attrs</span>(<span class="ruby-identifier">input</span>)
   <span class="ruby-identifier">options</span> = { <span class="ruby-identifier">col_sep</span><span class="ruby-operator">:</span> <span class="ruby-string">'='</span>, <span class="ruby-identifier">row_sep</span><span class="ruby-operator">:</span> <span class="ruby-string">' '</span>, <span class="ruby-identifier">quote_char</span><span class="ruby-operator">:</span> <span class="ruby-string">'&quot;'</span> }
   <span class="ruby-identifier">csv</span> = <span class="ruby-constant">CSV</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">input</span>, <span class="ruby-identifier">options</span>
@@ -432,38 +546,62 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
 
           
           <div class="method-source-code" id="render-source">
-            <pre><span class="ruby-comment"># File caption_tag.rb, line 113</span>
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 189</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">render</span>(<span class="ruby-identifier">context</span>)
-    <span class="ruby-ivar">@hash</span> = <span class="ruby-identifier">parse_attrs</span>(<span class="ruby-ivar">@text</span>)
+    <span class="ruby-ivar">@max_width</span> = <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'caption_max_width'</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;512&quot;</span>
+    <span class="ruby-ivar">@max_height</span> = <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'caption_max_height'</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;800&quot;</span>
+    <span class="ruby-ivar">@caption_folder</span> = <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'caption_folder'</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&quot;/captions&quot;</span>
 
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'text'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'caption'</span>)
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;[Warning][&quot;</span><span class="ruby-operator">+</span><span class="ruby-identifier">context</span>.<span class="ruby-identifier">environments</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">&quot;page&quot;</span>][<span class="ruby-string">&quot;url&quot;</span>]<span class="ruby-operator">+</span><span class="ruby-string">&quot;] One caption Liquid tag has both, 'text' and 'caption' attribute. Using 'caption' is better.&quot;</span>
+    <span class="ruby-ivar">@attributes</span> = <span class="ruby-identifier">parse_attrs</span>(<span class="ruby-ivar">@text</span>)
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'text'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'caption'</span>)
+        <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-string">&quot;[&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">context</span>.<span class="ruby-identifier">environments</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">&quot;page&quot;</span>][<span class="ruby-string">&quot;url&quot;</span>] <span class="ruby-operator">+</span><span class="ruby-string">&quot;] &quot;</span> <span class="ruby-operator">+</span>
+            <span class="ruby-string">&quot;One caption Liquid tag has both, 'text' and 'caption' &quot;</span> <span class="ruby-operator">+</span>
+            <span class="ruby-string">&quot;attribute. 'text' is deprecated.&quot;</span>)
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'title'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'caption'</span>)
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;[Warning][&quot;</span><span class="ruby-operator">+</span><span class="ruby-identifier">context</span>.<span class="ruby-identifier">environments</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">&quot;page&quot;</span>][<span class="ruby-string">&quot;url&quot;</span>]<span class="ruby-operator">+</span><span class="ruby-string">&quot;] One caption Liquid tag has both, 'title' and 'caption' attribute. Using 'caption' is better.&quot;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'title'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'caption'</span>)
+        <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-string">&quot;[&quot;</span><span class="ruby-operator">+</span><span class="ruby-identifier">context</span>.<span class="ruby-identifier">environments</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">&quot;page&quot;</span>][<span class="ruby-string">&quot;url&quot;</span>] <span class="ruby-operator">+</span><span class="ruby-string">&quot;] &quot;</span> <span class="ruby-operator">+</span>
+            <span class="ruby-string">&quot;One caption Liquid tag has both, 'title' and 'caption' &quot;</span> <span class="ruby-operator">+</span>
+            <span class="ruby-string">&quot;attribute. 'title' is deprecated.&quot;</span>)
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'text'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'caption'</span>)
-        <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'caption'</span>] = <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'text'</span>]
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'text'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'caption'</span>)
+        <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption'</span>] = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'text'</span>]
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'title'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'caption'</span>)
-        <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'caption'</span>] = <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'title'</span>]
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'title'</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@attributes</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-string">'caption'</span>)
+        <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption'</span>] = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'title'</span>]
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'orig-url'</span>] = <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'url'</span>]
+    <span class="ruby-identifier">original_url</span> = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'url'</span>]
 
-    <span class="ruby-ivar">@divWidth</span> = (<span class="ruby-ivar">@hash</span>[<span class="ruby-string">'width'</span>].<span class="ruby-identifier">to_i</span><span class="ruby-operator">+</span><span class="ruby-value">10</span>).<span class="ruby-identifier">to_s</span>
+    <span class="ruby-ivar">@divWidth</span> = (<span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>].<span class="ruby-identifier">to_i</span><span class="ruby-operator">+</span><span class="ruby-value">10</span>).<span class="ruby-identifier">to_s</span>
 
-    <span class="ruby-identifier">img_path</span> = <span class="ruby-identifier">get_image_path</span>(<span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'source'</span>], <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:page</span>][<span class="ruby-string">&quot;path&quot;</span>], <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'url'</span>])
-    <span class="ruby-comment"># TODO: check if img_path actually contains an image</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">img_path</span>)
-        <span class="ruby-identifier">width</span>, <span class="ruby-identifier">height</span> = <span class="ruby-constant">Dimensions</span>.<span class="ruby-identifier">dimensions</span>(<span class="ruby-identifier">img_path</span>)
+    <span class="ruby-identifier">original_image_path</span> = <span class="ruby-identifier">get_image_path</span>(<span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'source'</span>],
+                              <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:page</span>][<span class="ruby-string">&quot;path&quot;</span>],
+                              <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'url'</span>])
+    <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Process '&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">original_image_path</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;'&quot;</span>)
+    <span class="ruby-comment"># TODO: check if original_image_path actually contains an image</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">original_image_path</span>)
+        <span class="ruby-identifier">orig_width</span>, <span class="ruby-identifier">orig_height</span> = <span class="ruby-constant">Dimensions</span>.<span class="ruby-identifier">dimensions</span>(<span class="ruby-identifier">original_image_path</span>)
 
-        <span class="ruby-keyword">if</span> <span class="ruby-identifier">width</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'width'</span>].<span class="ruby-identifier">to_i</span>
-            <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'height'</span>] = <span class="ruby-string">&quot;800&quot;</span>
-            <span class="ruby-identifier">new_filename</span> = <span class="ruby-identifier">get_destination_path</span>(<span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'source'</span>], <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:page</span>][<span class="ruby-string">&quot;path&quot;</span>], <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'url'</span>])
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">orig_width</span>.<span class="ruby-identifier">nil?</span>
+            <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-string">&quot;Image '&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">original_image_path</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;' is defect.&quot;</span>)
+            <span class="ruby-identifier">exit</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-comment"># Set height of caption image if not done already</span>
+        <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'height'</span>] = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'height'</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@max_height</span>
+
+        <span class="ruby-comment"># Set width of caption image if not done already</span>
+        <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>] = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@max_height</span>
+
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">orig_width</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>].<span class="ruby-identifier">to_i</span>
+            <span class="ruby-identifier">new_filename</span> = <span class="ruby-identifier">get_destination_path</span>(
+                                 <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'source'</span>],
+                                 <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:page</span>][<span class="ruby-string">&quot;path&quot;</span>],
+                                 <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'url'</span>])
 
             <span class="ruby-comment"># Create folder if not exists</span>
             <span class="ruby-identifier">dirname</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">new_filename</span>)
@@ -471,28 +609,111 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
                 <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span>(<span class="ruby-identifier">dirname</span>)
             <span class="ruby-keyword">end</span>
 
-            <span class="ruby-identifier">image</span> = <span class="ruby-constant">Magick</span><span class="ruby-operator">::</span><span class="ruby-constant">Image</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">img_path</span>).<span class="ruby-identifier">first</span>
-            <span class="ruby-identifier">image</span>.<span class="ruby-identifier">change_geometry!</span>(<span class="ruby-ivar">@hash</span>[<span class="ruby-string">'width'</span>]<span class="ruby-operator">+</span><span class="ruby-string">&quot;x&quot;</span><span class="ruby-operator">+</span><span class="ruby-ivar">@hash</span>[<span class="ruby-string">'height'</span>]) { <span class="ruby-operator">|</span><span class="ruby-identifier">cols</span>, <span class="ruby-identifier">rows</span>, <span class="ruby-identifier">img</span><span class="ruby-operator">|</span>
-                <span class="ruby-identifier">newimg</span> = <span class="ruby-identifier">img</span>.<span class="ruby-identifier">resize</span>(<span class="ruby-identifier">cols</span>, <span class="ruby-identifier">rows</span>)
-                <span class="ruby-identifier">newimg</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">new_filename</span>)
-            }
-            <span class="ruby-identifier">width</span>, <span class="ruby-identifier">height</span> = <span class="ruby-constant">Dimensions</span>.<span class="ruby-identifier">dimensions</span>(<span class="ruby-identifier">new_filename</span>)
-            <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'width'</span>]  = <span class="ruby-identifier">width</span>.<span class="ruby-identifier">to_s</span>()
-            <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'height'</span>] = <span class="ruby-identifier">height</span>.<span class="ruby-identifier">to_s</span>()
-            <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'url'</span>] = <span class="ruby-identifier">get_online_url</span>(<span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'source'</span>],<span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'baseurl'</span>], <span class="ruby-identifier">new_filename</span>)
-        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">width</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'width'</span>].<span class="ruby-identifier">to_i</span>
-            <span class="ruby-ivar">@hash</span>[<span class="ruby-string">'width'</span>] = <span class="ruby-identifier">width</span>.<span class="ruby-identifier">to_s</span>
+            <span class="ruby-keyword">if</span> <span class="ruby-identifier">was_already_scaled</span>(<span class="ruby-ivar">@written_files</span>, <span class="ruby-identifier">original_image_path</span>, <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>])
+                <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Image was already scaled&quot;</span>)
+                <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_width'</span>] = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>]
+                <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_height'</span>] = <span class="ruby-ivar">@written_files</span>[<span class="ruby-identifier">original_image_path</span>][<span class="ruby-string">&quot;scaled&quot;</span>][<span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_width'</span>]]
+            <span class="ruby-keyword">else</span>
+                <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Image needs to get scaled scaled&quot;</span>)
+                <span class="ruby-identifier">image</span> = <span class="ruby-constant">Magick</span><span class="ruby-operator">::</span><span class="ruby-constant">Image</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">original_image_path</span>).<span class="ruby-identifier">first</span>
+                <span class="ruby-identifier">image</span>.<span class="ruby-identifier">change_geometry!</span>(<span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>]<span class="ruby-operator">+</span><span class="ruby-string">&quot;x&quot;</span><span class="ruby-operator">+</span>
+                    <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'height'</span>]) { <span class="ruby-operator">|</span><span class="ruby-identifier">cols</span>, <span class="ruby-identifier">rows</span>, <span class="ruby-identifier">img</span><span class="ruby-operator">|</span>
+                    <span class="ruby-identifier">newimg</span> = <span class="ruby-identifier">img</span>.<span class="ruby-identifier">resize</span>(<span class="ruby-identifier">cols</span>, <span class="ruby-identifier">rows</span>)
+                    <span class="ruby-identifier">newimg</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">new_filename</span>)
+                }
+                <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_width'</span>], <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_height'</span>] = <span class="ruby-constant">Dimensions</span>.<span class="ruby-identifier">dimensions</span>(<span class="ruby-identifier">new_filename</span>)
+                <span class="ruby-identifier">dump_serialized_data</span>(<span class="ruby-ivar">@serialized_filename</span>, <span class="ruby-ivar">@written_files</span>,
+                 <span class="ruby-identifier">original_image_path</span>, <span class="ruby-identifier">orig_width</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-identifier">orig_height</span>.<span class="ruby-identifier">to_s</span>,
+                 <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_width'</span>], <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_height'</span>])
+            <span class="ruby-keyword">end</span>
+
+            <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_width'</span>]  = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_width'</span>].<span class="ruby-identifier">to_s</span>
+            <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_height'</span>] = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_height'</span>].<span class="ruby-identifier">to_s</span>
+
+            <span class="ruby-identifier">caption_url</span> = <span class="ruby-identifier">get_online_url</span>(
+                            <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'source'</span>],
+                            <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'baseurl'</span>],
+                            <span class="ruby-identifier">new_filename</span>)
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">orig_width</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>].<span class="ruby-identifier">to_i</span>
+            <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-string">&quot;The original has width of &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">orig_width</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span>
+                         <span class="ruby-string">&quot;. The caption width is &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>] <span class="ruby-operator">+</span>
+                         <span class="ruby-string">&quot;(in &quot;</span><span class="ruby-operator">+</span> <span class="ruby-identifier">context</span>.<span class="ruby-identifier">environments</span>.<span class="ruby-identifier">first</span>[<span class="ruby-string">&quot;page&quot;</span>][<span class="ruby-string">&quot;url&quot;</span>] <span class="ruby-operator">+</span>
+                         <span class="ruby-string">&quot; for &quot;</span><span class="ruby-operator">+</span><span class="ruby-identifier">original_image_path</span><span class="ruby-operator">+</span><span class="ruby-string">&quot;)&quot;</span>)
+            <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'width'</span>] = <span class="ruby-identifier">orig_width</span>.<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword">else</span>
+            <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">info</span>(<span class="ruby-string">&quot;Scaled width = original width. Nothing to do.&quot;</span>)
         <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;[Warning] &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">img_path</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot; does not exist (in &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:page</span>][<span class="ruby-string">&quot;path&quot;</span>] <span class="ruby-operator">+</span> <span class="ruby-string">&quot;)&quot;</span>
+        <span class="ruby-identifier">$logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-identifier">original_image_path</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot; does not exist (in &quot;</span> <span class="ruby-operator">+</span>
+                    <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:page</span>][<span class="ruby-string">&quot;path&quot;</span>] <span class="ruby-operator">+</span> <span class="ruby-string">&quot;)&quot;</span>)
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-node">&quot;&lt;div style=\&quot;width: #{@divWidth}px\&quot; class=\&quot;wp-caption #{@hash['align']}\&quot;&gt;&quot;</span> <span class="ruby-operator">+</span>
-    <span class="ruby-node">&quot;&lt;a href=\&quot;#{@hash['orig-url']}\&quot;&gt;&quot;</span> <span class="ruby-operator">+</span>
-        <span class="ruby-node">&quot;&lt;img src=\&quot;#{@hash['url']}\&quot; alt=\&quot;#{@hash['text']}\&quot; width=\&quot;#{@hash['width']}\&quot; height=\&quot;#{@hash['height']}\&quot; class=\&quot;#{@hash['class']}\&quot;/&gt;&quot;</span> <span class="ruby-operator">+</span>
+    <span class="ruby-node">&quot;&lt;div style=\&quot;width: #{@divWidth}px\&quot; &quot;</span> <span class="ruby-operator">+</span>
+         <span class="ruby-node">&quot;class=\&quot;wp-caption #{@attributes['align']}\&quot;&gt;&quot;</span> <span class="ruby-operator">+</span>
+    <span class="ruby-node">&quot;&lt;a href=\&quot;#{original_url}\&quot;&gt;&quot;</span> <span class="ruby-operator">+</span>
+        <span class="ruby-node">&quot;&lt;img src=\&quot;#{@attributes['url']}\&quot; &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;alt=\&quot;#{@attributes['alt']}\&quot; width=\&quot;#{@attributes['caption_width']}\&quot; &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;height=\&quot;#{@attributes['caption_height']}\&quot; &quot;</span> <span class="ruby-operator">+</span>
+             <span class="ruby-node">&quot;class=\&quot;#{@attributes['class']}\&quot;/&gt;&quot;</span> <span class="ruby-operator">+</span>
     <span class="ruby-string">&quot;&lt;/a&gt;&quot;</span> <span class="ruby-operator">+</span>
-    <span class="ruby-node">&quot;&lt;p class=\&quot;wp-caption-text\&quot;&gt;#{@hash['caption']}&lt;/p&gt;&quot;</span> <span class="ruby-operator">+</span>
+    <span class="ruby-node">&quot;&lt;p class=\&quot;wp-caption-text\&quot;&gt;#{@attributes['caption']}&lt;/p&gt;&quot;</span> <span class="ruby-operator">+</span>
     <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-was_already_scaled" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">was_already_scaled</span><span
+            class="method-args">(written_files, original_image_path, scaled_width)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Check if ‘original_image_path’ was already scaled before.</p>
+<ul><li>
+<p><strong>Args</strong>    :</p>
+</li></ul>
+<dl class="rdoc-list note-list"><dt><code>written_files</code>
+<dd>
+<p>datastructure that contains all scaled files</p>
+</dd><dt><code>original_image_path</code>
+<dd>
+<p>pre-captioning image</p>
+</dd><dt><code>scaled_width</code>
+<dd>
+<p>width of the scaled caption</p>
+</dd></dl>
+<ul><li>
+<p><strong>Returns</strong>    : Boolean</p>
+</li></ul>
+          
+          
+
+          
+          <div class="method-source-code" id="was_already_scaled-source">
+            <pre><span class="ruby-comment"># File caption_tag.rb, line 87</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">was_already_scaled</span>(<span class="ruby-identifier">written_files</span>, <span class="ruby-identifier">original_image_path</span>, <span class="ruby-identifier">scaled_width</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">written_files</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">original_image_path</span>)
+        <span class="ruby-comment"># TODO: Sure that you only have to check width?</span>
+        <span class="ruby-comment">#       Or maybe also height?</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">written_files</span>[<span class="ruby-identifier">original_image_path</span>][<span class="ruby-string">&quot;scaled&quot;</span>].
+                                                    <span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">scaled_width</span>)
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

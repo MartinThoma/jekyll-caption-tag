@@ -18,11 +18,11 @@ How To use
 ==========
 Place a `caption` tag in your content file, e.g.:
 ```
-{% caption align="aligncenter" width="512" height="233" alt="The order of points is important for the definition of a polygon" text="[A, B, C, D, E, F, G] != [A, B, C, D, F, E, G]" url="../images/2013/11/polygon-order.png" %}
+{% caption align="aligncenter" width="512" height="233" alt="The order of points is important for the definition of a polygon" caption="[A, B, C, D, E, F, G] != [A, B, C, D, F, E, G]" url="../images/2013/11/polygon-order.png" %}
 ```
 
 | Attribute     | Details                                                                    |
-| ------------- |--------------------------------------------------------------------------- |
+| ------------- |----------------------------------------------------------------------------|
 | align         | The content of this will be added to the class of the surrounding `<div>`. |
 | width         | The width of the image.                                                    |
 | height        | The width of the image.                                                    |
@@ -30,12 +30,27 @@ Place a `caption` tag in your content file, e.g.:
 | caption       | The text below the image.                                                  |
 | url           | The source (src) of the image.                                             |
 
+Global configuration options
+============================
+
+You can place the following options in your `_config.yml` file:
+
+| Attribute          | Default     | Details                                                         |
+|--------------------|-------------|-----------------------------------------------------------------|
+| caption_max_width  | "512"       | The maxiumum width captions may have when you don't specify it. |
+| caption_max_height | "800"       | The maximum height captions may have when you don't specify it. |
+| caption_folder     | "/captions" | The folder where captions get stored.                           |
+
 Examples
 ========
 * [post](https://github.com/MartinThoma/MartinThoma.github.io/blob/source/_posts/2013-11-18-check-point-inside-polygon.md), [rendered post](http://martin-thoma.com/check-point-inside-polygon/)
 
 Changelog
 =========
+Version 1.5, 2014-05-13:
+    - Added global configuration options
+    - Added check if image was already scaled
+    - Added logger
 Version 1.4, 2014-03-27:
     - Fixed issue (if two files had the same name, but were in different folder the captions were overwritten)
 Version 1.3, 2014-03-24:
@@ -73,4 +88,3 @@ TODO
 * Create a logfile which caption images have been created so that they don't
   get created multiple times.
 * Try to get rid of step 5 of "how to install".
-* Add a configuration option for captions folder.
