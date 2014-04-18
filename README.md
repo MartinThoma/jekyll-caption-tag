@@ -47,8 +47,12 @@ Examples
 
 Changelog
 =========
+* Version 1.7, 2014-04-18:
+    - Relative URLs check path relative to the pre-generation post first.
+      If no image is found then the root source folder is taken as base.
+    - Fixed get_online_url to use the caption folder (see issue #6).
 * Version 1.6, 2014-04-18:
-    - Fixed issue #4
+    - Fixed issue (generated caption images were not used)
 * Version 1.5, 2014-04-13:
     - Added global configuration options
     - Added check if image was already scaled

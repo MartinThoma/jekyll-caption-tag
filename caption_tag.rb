@@ -3,7 +3,7 @@
 #
 # Author: Martin Thoma (info@martin-thoma.de)
 # Source: https://github.com/MartinThoma/jekyll-caption-tag
-# Version: 1.6
+# Version: 1.7
 #
 # Example usage:
 #   {% caption align="aligncenter" width="500" alt="WER calculation" caption="WER calculation" url="../images/2014/03/lolcat.jpg" %}
@@ -135,6 +135,11 @@ module Jekyll
             current_post_folder_path = File.dirname(current_post_path)
             new_path = File.expand_path(File.join(current_post_folder_path,
                                                   img_src))
+
+            if !File.exist?(new_path)
+                # Use site_soure as root, not current_post_folder_path
+                new_path = File.expand_path(File.join(site_source, img_src))
+            end
         end
         return new_path
     end
@@ -143,15 +148,13 @@ module Jekyll
     # Returns the url of the image where it will be online.
     #
     # * *Args*    :
-    #   - +site_source+:: e.g. '/home/moose/Downloads/MartinThoma.github.io'
     #   - +baseurl+:: e.g. 'http://localhost/blog' or 'http://martin-thoma.com'
-    #   - +new_filename+:: e.g. '
-    #          /home/moose/Downloads/MartinThoma.github.io/captions/lolcat.jpg'
+    #   - +new_filename+:: e.g.
+    #         '/home/moose/Downloads/MartinThoma.github.io/captions/lolcat.jpg'
     # * *Returns*    :
     #   - e.g.  http://localhost/blog/captions/lolcat.jpg
-    def get_online_url(site_source, baseurl, new_filename)
-        dest = File.join(baseurl, new_filename[site_source.length..-1])
-        return dest
+    def get_online_url(baseurl, new_filename)
+        File.join(baseurl, @caption_folder, File.basename(new_filename))
     end
 
 
@@ -270,7 +273,6 @@ module Jekyll
                 @attributes['caption_height'] = @attributes['caption_height'].to_s
 
                 @attributes['caption_url'] = get_online_url(
-                                context.registers[:site].config['source'],
                                 context.registers[:site].config['baseurl'],
                                 new_filename)
             elsif orig_width < @attributes['width'].to_i
