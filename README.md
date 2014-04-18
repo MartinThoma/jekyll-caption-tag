@@ -47,6 +47,10 @@ Examples
 
 Changelog
 =========
+* Version 1.8, 2014-04-18:
+    - Check and fail if url attribute is missing.
+    - Fix for a problem that occured when image was smaller than the specified
+      width.
 * Version 1.7, 2014-04-18:
     - Relative URLs check path relative to the pre-generation post first.
       If no image is found then the root source folder is taken as base.

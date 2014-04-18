@@ -3,7 +3,7 @@
 #
 # Author: Martin Thoma (info@martin-thoma.de)
 # Source: https://github.com/MartinThoma/jekyll-caption-tag
-# Version: 1.7
+# Version: 1.8
 #
 # Example usage:
 #   {% caption align="aligncenter" width="500" alt="WER calculation" caption="WER calculation" url="../images/2014/03/lolcat.jpg" %}
@@ -196,6 +196,13 @@ module Jekyll
 
         @attributes = parse_attrs(@text)
 
+        if !@attributes.has_key?('url')
+            $logger.error("Image in post '" +
+                          context.registers[:page]["path"] +
+                          "' has no 'url' attribute.")
+            exit
+        end
+
         if @attributes.has_key?('text') && @attributes.has_key?('caption')
             $logger.warn("[" + context.environments.first["page"]["url"] +"] " +
                 "One caption Liquid tag has both, 'text' and 'caption' " +
@@ -281,8 +288,10 @@ module Jekyll
                              "(in "+ context.environments.first["page"]["url"] +
                              " for "+original_image_path+")")
                 @attributes['width'] = orig_width.to_s
+                @attributes['caption_url'] = @attributes['url']
             else
                 $logger.info("Scaled width = original width. Nothing to do.")
+                @attributes['caption_url'] = @attributes['url']
             end
         else
             $logger.warn(original_image_path + " does not exist (in " +
