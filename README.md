@@ -47,7 +47,9 @@ Examples
 
 Changelog
 =========
-* Version 1.5, 2014-05-13:
+* Version 1.6, 2014-04-18:
+    - Fixed issue #4
+* Version 1.5, 2014-04-13:
     - Added global configuration options
     - Added check if image was already scaled
     - Added logger

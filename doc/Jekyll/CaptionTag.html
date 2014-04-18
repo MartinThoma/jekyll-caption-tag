@@ -630,7 +630,7 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
             <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_width'</span>]  = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_width'</span>].<span class="ruby-identifier">to_s</span>
             <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_height'</span>] = <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_height'</span>].<span class="ruby-identifier">to_s</span>
 
-            <span class="ruby-identifier">caption_url</span> = <span class="ruby-identifier">get_online_url</span>(
+            <span class="ruby-ivar">@attributes</span>[<span class="ruby-string">'caption_url'</span>] = <span class="ruby-identifier">get_online_url</span>(
                             <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'source'</span>],
                             <span class="ruby-identifier">context</span>.<span class="ruby-identifier">registers</span>[<span class="ruby-value">:site</span>].<span class="ruby-identifier">config</span>[<span class="ruby-string">'baseurl'</span>],
                             <span class="ruby-identifier">new_filename</span>)
@@ -651,7 +651,7 @@ href="http://martin-thoma.com">martin-thoma.com</a>’</p>
     <span class="ruby-node">&quot;&lt;div style=\&quot;width: #{@divWidth}px\&quot; &quot;</span> <span class="ruby-operator">+</span>
          <span class="ruby-node">&quot;class=\&quot;wp-caption #{@attributes['align']}\&quot;&gt;&quot;</span> <span class="ruby-operator">+</span>
     <span class="ruby-node">&quot;&lt;a href=\&quot;#{original_url}\&quot;&gt;&quot;</span> <span class="ruby-operator">+</span>
-        <span class="ruby-node">&quot;&lt;img src=\&quot;#{@attributes['url']}\&quot; &quot;</span> <span class="ruby-operator">+</span>
+        <span class="ruby-node">&quot;&lt;img src=\&quot;#{@attributes['caption_url']}\&quot; &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-node">&quot;alt=\&quot;#{@attributes['alt']}\&quot; width=\&quot;#{@attributes['caption_width']}\&quot; &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-node">&quot;height=\&quot;#{@attributes['caption_height']}\&quot; &quot;</span> <span class="ruby-operator">+</span>
              <span class="ruby-node">&quot;class=\&quot;#{@attributes['class']}\&quot;/&gt;&quot;</span> <span class="ruby-operator">+</span>

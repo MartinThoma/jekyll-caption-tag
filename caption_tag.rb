@@ -3,7 +3,7 @@
 #
 # Author: Martin Thoma (info@martin-thoma.de)
 # Source: https://github.com/MartinThoma/jekyll-caption-tag
-# Version: 1.5
+# Version: 1.6
 #
 # Example usage:
 #   {% caption align="aligncenter" width="500" alt="WER calculation" caption="WER calculation" url="../images/2014/03/lolcat.jpg" %}
@@ -269,7 +269,7 @@ module Jekyll
                 @attributes['caption_width']  = @attributes['caption_width'].to_s
                 @attributes['caption_height'] = @attributes['caption_height'].to_s
 
-                caption_url = get_online_url(
+                @attributes['caption_url'] = get_online_url(
                                 context.registers[:site].config['source'],
                                 context.registers[:site].config['baseurl'],
                                 new_filename)
@@ -290,7 +290,7 @@ module Jekyll
         "<div style=\"width: #{@divWidth}px\" " +
              "class=\"wp-caption #{@attributes['align']}\">" +
         "<a href=\"#{original_url}\">" +
-            "<img src=\"#{@attributes['url']}\" " +
+            "<img src=\"#{@attributes['caption_url']}\" " +
                  "alt=\"#{@attributes['alt']}\" width=\"#{@attributes['caption_width']}\" " +
                  "height=\"#{@attributes['caption_height']}\" " +
                  "class=\"#{@attributes['class']}\"/>" +
